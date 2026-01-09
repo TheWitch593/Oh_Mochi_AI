@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+/* Custom Mochi Cursor */
+.cursor-mochi {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23FBBFCA'/%3E%3Ccircle cx='12' cy='12' r='7' fill='%23FFF5F7'/%3E%3Ccircle cx='9' cy='10' r='1.5' fill='%23333'/%3E%3Ccircle cx='15' cy='10' r='1.5' fill='%23333'/%3E%3Cpath d='M10 14 Q12 16 14 14' stroke='%23333' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") 12 12, auto;
+}
+
+.cursor-mochi-text {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='24' viewBox='0 0 20 24'%3E%3Crect x='8' y='0' width='4' height='24' rx='2' fill='%23FBBFCA'/%3E%3Ccircle cx='10' cy='4' r='4' fill='%23B8E6D0'/%3E%3C/svg%3E") 10 12, text;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 350 30% 25%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 350 30% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 350 30% 25%;
+
+    --primary: 350 70% 75%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 95 55% 65%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 350 30% 96%;
+    --muted-foreground: 350 20% 50%;
+
+    --accent: 95 55% 90%;
+    --accent-foreground: 95 40% 30%;
+
+    --destructive: 0 70% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 350 30% 90%;
+    --input: 350 30% 90%;
+    --ring: 350 70% 75%;
+
+    --radius: 1rem;
+
+    /* Custom mochi colors */
+    --mochi-pink: 350 70% 75%;
+    --mochi-pink-light: 350 70% 92%;
+    --mochi-pink-dark: 350 50% 60%;
+    --mochi-green: 95 55% 65%;
+    --mochi-green-light: 95 55% 90%;
+    --mochi-green-dark: 95 40% 45%;
+    --mochi-cream: 40 30% 97%;
+    --mochi-cream-dark: 40 20% 92%;
+
+    --sidebar-background: 350 70% 97%;
+    --sidebar-foreground: 350 30% 25%;
+    --sidebar-primary: 350 70% 75%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 95 55% 90%;
+    --sidebar-accent-foreground: 95 40% 30%;
+    --sidebar-border: 350 30% 90%;
+    --sidebar-ring: 350 70% 75%;
+  }
+
+  .dark {
+    --background: 350 20% 10%;
+    --foreground: 350 20% 95%;
+
+    --card: 350 20% 12%;
+    --card-foreground: 350 20% 95%;
+
+    --popover: 350 20% 12%;
+    --popover-foreground: 350 20% 95%;
+
+    --primary: 350 70% 70%;
+    --primary-foreground: 350 20% 10%;
+
+    --secondary: 95 45% 55%;
+    --secondary-foreground: 350 20% 10%;
+
+    --muted: 350 20% 18%;
+    --muted-foreground: 350 20% 65%;
+
+    --accent: 95 40% 20%;
+    --accent-foreground: 95 55% 80%;
+
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 350 20% 20%;
+    --input: 350 20% 20%;
+    --ring: 350 70% 70%;
+
+    --mochi-pink: 350 70% 70%;
+    --mochi-pink-light: 350 40% 25%;
+    --mochi-pink-dark: 350 50% 55%;
+    --mochi-green: 95 45% 55%;
+    --mochi-green-light: 95 30% 20%;
+    --mochi-green-dark: 95 35% 40%;
+    --mochi-cream: 350 15% 15%;
+    --mochi-cream-dark: 350 15% 12%;
+
+    --sidebar-background: 350 20% 12%;
+    --sidebar-foreground: 350 20% 95%;
+    --sidebar-primary: 350 70% 70%;
+    --sidebar-primary-foreground: 350 20% 10%;
+    --sidebar-accent: 95 40% 20%;
+    --sidebar-accent-foreground: 95 55% 80%;
+    --sidebar-border: 350 20% 20%;
+    --sidebar-ring: 350 70% 70%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-quicksand;
+  }
+}
+
+@layer utilities {
+  .mochi-gradient {
+    background: linear-gradient(135deg, hsl(var(--mochi-pink-light)) 0%, hsl(var(--mochi-cream)) 50%, hsl(var(--mochi-green-light)) 100%);
+  }
+
+  .mochi-shadow {
+    box-shadow: 0 4px 20px -4px hsl(var(--mochi-pink) / 0.3);
+  }
+
+  .mochi-shadow-green {
+    box-shadow: 0 4px 20px -4px hsl(var(--mochi-green) / 0.3);
+  }
+
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .bounce-soft {
+    animation: bounce-soft 2s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes bounce-soft {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+}
