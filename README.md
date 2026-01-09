@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Oh Mochi
 
 ## Project info
 
