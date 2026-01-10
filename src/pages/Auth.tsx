@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/Footer";
 import logo from "@/assets/logo.png";
+import api from "@/services/api";
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -15,6 +16,8 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const urlMode = searchParams.get("mode");
@@ -23,15 +26,49 @@ const Auth = () => {
     }
   }, [searchParams]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual authentication
-    console.log("Auth submitted:", { mode, email, password, name });
+    setError("");
+    
+    // Validation
+    if (!email || !password) {
+      setError("Email and password are required");
+      return;
+    }
+    
+    if (mode === "signup") {
+      if (!name) {
+        setError("Name is required");
+        return;
+      }
+      if (password !== confirmPassword) {
+        setError("Passwords do not match");
+        return;
+      }
+      if (password.length < 6) {
+        setError("Password must be at least 6 characters");
+        return;
+      }
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      // For now, log the attempt - backend API endpoints need to be implemented
+      console.log("Auth submitted:", { mode, email, password, name });
+      // TODO: Replace with actual API calls once backend endpoints are ready
+      // await api.login({ email, password }) or api.signup({ name, email, password })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Authentication failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleAuth = () => {
-    // TODO: Implement Google authentication
-    console.log("Google auth clicked");
+    // TODO: Fix backend OAuth configuration first
+    setError("Google Sign-In is temporarily unavailable. Please use Guest mode or email/password once implemented.");
+    console.error("Backend OAuth not configured. Check backend application.properties for Google OAuth credentials.");
   };
 
   return (
@@ -103,6 +140,12 @@ const Auth = () => {
 
             {/* Email/Password Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+                  {error}
+                </div>
+              )}
+              
               {mode === "signup" && (
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-foreground font-medium">Name</Label>
@@ -113,6 +156,7 @@ const Auth = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="h-12 rounded-xl border-2 border-input focus:border-primary"
+                    disabled={isLoading}
                   />
                 </div>
               )}
@@ -126,6 +170,7 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-12 rounded-xl border-2 border-input focus:border-primary"
+                  disabled={isLoading}
                 />
               </div>
 
@@ -138,6 +183,7 @@ const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-12 rounded-xl border-2 border-input focus:border-primary"
+                  disabled={isLoading}
                 />
               </div>
 
@@ -151,6 +197,7 @@ const Auth = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="h-12 rounded-xl border-2 border-input focus:border-primary"
+                    disabled={isLoading}
                   />
                 </div>
               )}
@@ -160,8 +207,9 @@ const Auth = () => {
                 variant={mode === "signup" ? "mochi" : "mochi-green"}
                 className="w-full"
                 size="lg"
+                disabled={isLoading}
               >
-                {mode === "login" ? "Sign In" : "Create Account"}
+                {isLoading ? "Processing..." : (mode === "login" ? "Sign In" : "Create Account")}
               </Button>
             </form>
 
