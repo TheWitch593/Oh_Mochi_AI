@@ -1,7 +1,7 @@
 // API Service for Oh Mochi AI
 // This handles all communication with the backend
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+const API_URL = import.meta.env.VITE_API_URL || 'https://musical-acorn-w69vqj49r4c5g7r-8081.app.github.dev';
 
 export const api = {
   // Health check
