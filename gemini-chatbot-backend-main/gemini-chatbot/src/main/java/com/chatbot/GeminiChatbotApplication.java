@@ -9,7 +9,4 @@ public class GeminiChatbotApplication {
     public static void main(String[] args) {
         SpringApplication.run(GeminiChatbotApplication.class, args);
     }
-
-    // I DELETED THE corsConfigurer METHOD FROM HERE
-    // because we are handling it in SecurityConfig.java now.
 }
