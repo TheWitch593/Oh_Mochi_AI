@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/Footer";
 import logo from "@/assets/logo.png";
-import api from "@/services/api";
+import { api } from "@/services/api"; // Make sure this import is correct based on your file structure
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -54,10 +54,9 @@ const Auth = () => {
     setIsLoading(true);
     
     try {
-      // For now, log the attempt - backend API endpoints need to be implemented
+      // For now, log the attempt
       console.log("Auth submitted:", { mode, email, password, name });
-      // TODO: Replace with actual API calls once backend endpoints are ready
-      // await api.login({ email, password }) or api.signup({ name, email, password })
+      // TODO: Connect this to api.signup() or api.login() when you have standard email auth ready
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed");
     } finally {
@@ -65,10 +64,10 @@ const Auth = () => {
     }
   };
 
+  // --- THIS IS THE FIXED FUNCTION ---
   const handleGoogleAuth = () => {
-    // TODO: Fix backend OAuth configuration first
-    setError("Google Sign-In is temporarily unavailable. Please use Guest mode or email/password once implemented.");
-    console.error("Backend OAuth not configured. Check backend application.properties for Google OAuth credentials.");
+    // This calls the backend to start the Google OAuth flow
+    api.login();
   };
 
   return (
@@ -252,7 +251,6 @@ const Auth = () => {
           </CardContent>
         </Card>
       </main>
-
       <Footer />
     </div>
   );

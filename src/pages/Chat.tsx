@@ -21,7 +21,6 @@ import Footer from "@/components/Footer";
 import logo from "@/assets/logo_open.png";
 import { 
   Send, 
-  Plus, 
   MessageCircle, 
   MoreVertical, 
   Pencil, 
@@ -32,6 +31,8 @@ import {
   Sparkles,
   Heart
 } from "lucide-react";
+// IMPORT YOUR API SERVICE HERE
+import api from "@/services/api";
 
 interface Message {
   id: string;
@@ -105,45 +106,47 @@ const Chat = () => {
 
   const currentConversation = conversations.find(c => c.id === activeConversation);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  // --- THIS IS THE FIXED FUNCTION ---
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim() || !currentConversation || isTyping) return;
 
+    // 1. Create the User Message
+    const userMessageContent = inputMessage;
     const newMessage: Message = {
       id: `m-${Date.now()}`,
-      content: inputMessage,
+      content: userMessageContent,
       role: "user",
       timestamp: new Date()
     };
 
-    // Add user message and show typing
+    // 2. Add to UI immediately
     setConversations(prev => prev.map(c => {
       if (c.id === activeConversation) {
         return {
           ...c,
           messages: [...c.messages, newMessage],
           updatedAt: new Date(),
-          title: c.messages.length === 0 ? inputMessage.slice(0, 25) + (inputMessage.length > 25 ? "..." : "") : c.title
+          title: c.messages.length === 0 ? userMessageContent.slice(0, 25) : c.title
         };
       }
       return c;
     }));
+    
     setInputMessage("");
     setIsTyping(true);
 
-    // Simulate typing delay then add response
-    setTimeout(() => {
-      const cuteResponses = [
-        "Aww, that's so sweet! Let me help you with that!",
-        "Ooh, great question! I love chatting with you!",
-        "Hehe, you're so nice! Here's what I think...",
-        "Yay, I'm so happy to help! Let me see...",
-        "That's wonderful! I'm here for you always!"
-      ];
+    try {
+      // 3. CALL THE BACKEND
+      const data = await api.sendMessage(userMessageContent, activeConversation);
+      
+      // 4. Handle the response
+      // We check multiple fields in case your backend DTO structure varies
+      const botResponseText = data.response || data.message || data.content || "I didn't get a text response.";
 
       const assistantMessage: Message = {
         id: `m-${Date.now() + 1}`,
-        content: cuteResponses[Math.floor(Math.random() * cuteResponses.length)],
+        content: botResponseText,
         role: "assistant",
         timestamp: new Date()
       };
@@ -158,8 +161,31 @@ const Chat = () => {
         }
         return c;
       }));
+
+    } catch (error) {
+      console.error("Chat error:", error);
+      
+      // Show error in chat bubble
+      const errorMessage: Message = {
+        id: `m-error-${Date.now()}`,
+        content: "⚠️ I couldn't reach the backend server. Please make sure the Java app is running!",
+        role: "assistant",
+        timestamp: new Date()
+      };
+      
+      setConversations(prev => prev.map(c => {
+        if (c.id === activeConversation) {
+          return {
+            ...c,
+            messages: [...c.messages, errorMessage],
+            updatedAt: new Date()
+          };
+        }
+        return c;
+      }));
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const handleNewConversation = () => {
