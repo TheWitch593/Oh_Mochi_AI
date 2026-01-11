@@ -1,7 +1,8 @@
 // API Service for Oh Mochi AI
 // This handles all communication with the backend
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+// Use your NEW Backend URL (from Port 8081)
+const API_URL = import.meta.env.VITE_API_URL || 'https://obscure-trout-r9r75vxr74hpxqq-8081.app.github.dev';
 
 export const api = {
   // Health check

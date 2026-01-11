@@ -21,6 +21,10 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
 
+    /* Allow JavaScript Files (The Fix) */
+    "allowJs": true,
+    "checkJs": false,
+
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
