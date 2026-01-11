@@ -106,6 +106,36 @@ const Chat = () => {
 
   const currentConversation = conversations.find(c => c.id === activeConversation);
 
+  // Function to strip markdown formatting
+  const stripMarkdown = (text: string): string => {
+    return text
+      // Remove bold (**text** or __text__)
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/__([^_]+)__/g, '$1')
+      // Remove italic (*text* or _text_)
+      .replace(/\*([^*]+)\*/g, '$1')
+      .replace(/_([^_]+)_/g, '$1')
+      // Remove headers (# ## ### etc)
+      .replace(/^#{1,6}\s+/gm, '')
+      // Remove inline code (`code`)
+      .replace(/`([^`]+)`/g, '$1')
+      // Remove code blocks (```code```)
+      .replace(/```[\s\S]*?```/g, '')
+      // Remove links [text](url)
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      // Remove images ![alt](url)
+      .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+      // Remove strikethrough (~~text~~)
+      .replace(/~~([^~]+)~~/g, '$1')
+      // Remove blockquotes (> text)
+      .replace(/^>\s+/gm, '')
+      // Remove horizontal rules (---, ***, ___)
+      .replace(/^[\-*_]{3,}\s*$/gm, '')
+      // Remove list markers (- * + 1. 2. etc)
+      .replace(/^[\s]*[-*+]\s+/gm, '')
+      .replace(/^[\s]*\d+\.\s+/gm, '');
+  };
+
   // --- THIS IS THE FIXED FUNCTION ---
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,10 +173,13 @@ const Chat = () => {
       // 4. Handle the response
       // We check multiple fields in case your backend DTO structure varies
       const botResponseText = data.response || data.message || data.content || "I didn't get a text response.";
+      
+      // Strip markdown formatting from the response
+      const cleanedResponse = stripMarkdown(botResponseText);
 
       const assistantMessage: Message = {
         id: `m-${Date.now() + 1}`,
-        content: botResponseText,
+        content: cleanedResponse,
         role: "assistant",
         timestamp: new Date()
       };

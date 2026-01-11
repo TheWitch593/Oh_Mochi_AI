@@ -1,70 +1,12 @@
-import { useState, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/Footer";
 import logo from "@/assets/logo.png";
-import { api } from "@/services/api"; // Make sure this import is correct based on your file structure
+import { api } from "@/services/api";
 
 const Auth = () => {
-  const [searchParams] = useSearchParams();
-  const [mode, setMode] = useState<"login" | "signup">("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const urlMode = searchParams.get("mode");
-    if (urlMode === "signup" || urlMode === "login") {
-      setMode(urlMode);
-    }
-  }, [searchParams]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    
-    // Validation
-    if (!email || !password) {
-      setError("Email and password are required");
-      return;
-    }
-    
-    if (mode === "signup") {
-      if (!name) {
-        setError("Name is required");
-        return;
-      }
-      if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
-      }
-      if (password.length < 6) {
-        setError("Password must be at least 6 characters");
-        return;
-      }
-    }
-    
-    setIsLoading(true);
-    
-    try {
-      // For now, log the attempt
-      console.log("Auth submitted:", { mode, email, password, name });
-      // TODO: Connect this to api.signup() or api.login() when you have standard email auth ready
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Authentication failed");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // --- THIS IS THE FIXED FUNCTION ---
   const handleGoogleAuth = () => {
     // This calls the backend to start the Google OAuth flow
     api.login();
@@ -94,12 +36,10 @@ const Auth = () => {
         <Card className="w-full max-w-md border-2 border-mochi-pink-light bg-card/90 backdrop-blur-sm mochi-shadow animate-fade-in">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-2xl font-bold text-foreground">
-              {mode === "login" ? "Welcome Back!" : "Join Oh, Mochi!"}
+              Welcome to Oh, Mochi!
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              {mode === "login" 
-                ? "Sign in to continue your conversations" 
-                : "Create an account to get started"}
+              Sign in to continue your conversations
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -137,117 +77,12 @@ const Auth = () => {
               </span>
             </div>
 
-            {/* Email/Password Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-                  {error}
-                </div>
-              )}
-              
-              {mode === "signup" && (
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-foreground font-medium">Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="h-12 rounded-xl border-2 border-input focus:border-primary"
-                    disabled={isLoading}
-                  />
-                </div>
-              )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground font-medium">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="hello@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 rounded-xl border-2 border-input focus:border-primary"
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 rounded-xl border-2 border-input focus:border-primary"
-                  disabled={isLoading}
-                />
-              </div>
-
-              {mode === "signup" && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-foreground font-medium">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="h-12 rounded-xl border-2 border-input focus:border-primary"
-                    disabled={isLoading}
-                  />
-                </div>
-              )}
-
-              <Button 
-                type="submit" 
-                variant={mode === "signup" ? "mochi" : "mochi-green"}
-                className="w-full"
-                size="lg"
-                disabled={isLoading}
-              >
-                {isLoading ? "Processing..." : (mode === "login" ? "Sign In" : "Create Account")}
-              </Button>
-            </form>
-
             {/* Ghost Mode */}
-            <div className="relative py-2">
-              <Separator />
-            </div>
             <Link to="/chat">
-              <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground">
-                👻 Use as Guest
+              <Button variant="ghost" className="w-full h-12 text-muted-foreground hover:text-foreground text-base">
+                👻 Continue as Guest
               </Button>
             </Link>
-
-            {/* Toggle Mode */}
-            <p className="text-center text-sm text-muted-foreground pt-2">
-              {mode === "login" ? (
-                <>
-                  Don't have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => setMode("signup")}
-                    className="text-primary font-semibold hover:underline"
-                  >
-                    Sign up
-                  </button>
-                </>
-              ) : (
-                <>
-                  Already have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => setMode("login")}
-                    className="text-secondary font-semibold hover:underline"
-                  >
-                    Sign in
-                  </button>
-                </>
-              )}
-            </p>
           </CardContent>
         </Card>
       </main>
